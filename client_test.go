@@ -17,7 +17,7 @@ func TestClient_SubmitTask(t *testing.T) {
 			t.Errorf("expected auth header, got %s", r.Header.Get("Authorization"))
 		}
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"taskId": "test-task-123"}`))
+		_, _ = w.Write([]byte(`{"taskId": "test-task-123"}`))
 	}))
 	defer server.Close()
 
@@ -42,9 +42,9 @@ func TestClient_WaitForCompletion(t *testing.T) {
 		attempts++
 		w.WriteHeader(http.StatusOK)
 		if attempts < 2 {
-			w.Write([]byte(`{"taskId": "task-1", "status": "processing"}`))
+			_, _ = w.Write([]byte(`{"taskId": "task-1", "status": "processing"}`))
 		} else {
-			w.Write([]byte(`{"taskId": "task-1", "status": "completed", "result": "done"}`))
+			_, _ = w.Write([]byte(`{"taskId": "task-1", "status": "completed", "result": "done"}`))
 		}
 	}))
 	defer server.Close()

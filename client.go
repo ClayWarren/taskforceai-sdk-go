@@ -27,7 +27,7 @@ type Client struct {
 	httpClient   *http.Client
 }
 
-func NewClient(opts TaskForceAIOptions) (*Client) {
+func NewClient(opts TaskForceAIOptions) *Client {
 	baseURL := opts.BaseURL
 	if baseURL == "" {
 		baseURL = DefaultBaseURL
@@ -101,7 +101,7 @@ func (c *Client) SubmitTask(ctx context.Context, prompt string, opts *TaskSubmis
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusAccepted {
 		return "", fmt.Errorf("failed to submit task: status %d", resp.StatusCode)
@@ -122,7 +122,7 @@ func (c *Client) GetTaskStatus(ctx context.Context, taskID string) (TaskStatus, 
 	if err != nil {
 		return TaskStatus{}, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return TaskStatus{}, fmt.Errorf("failed to get task status: status %d", resp.StatusCode)

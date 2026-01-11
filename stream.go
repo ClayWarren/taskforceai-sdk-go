@@ -19,7 +19,7 @@ type sseStream struct {
 
 func (c *Client) StreamTaskStatus(ctx context.Context, taskID string) (TaskStatusStream, error) {
 	streamCtx, cancel := context.WithCancel(ctx)
-	
+
 	url := c.baseURL + "/stream/" + taskID
 	req, err := http.NewRequestWithContext(streamCtx, "GET", url, nil)
 	if err != nil {
@@ -39,7 +39,7 @@ func (c *Client) StreamTaskStatus(ctx context.Context, taskID string) (TaskStatu
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		resp.Body.Close()
+		_ = resp.Body.Close()
 		cancel()
 		return nil, fmt.Errorf("stream error: status %d", resp.StatusCode)
 	}
