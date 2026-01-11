@@ -49,6 +49,7 @@ The main entry point for the SDK.
 Creates a new TaskForceAI client.
 
 **Options:**
+
 - `APIKey`: Your API key (required unless in MockMode)
 - `BaseURL`: Custom API endpoint (default: https://taskforceai.chat/api/developer)
 - `Timeout`: Request timeout (default: 30s)
@@ -57,21 +58,27 @@ Creates a new TaskForceAI client.
 ### Methods
 
 #### `SubmitTask(ctx, prompt, opts) (string, error)`
+
 Submits a prompt and returns a Task ID.
 
 #### `GetTaskStatus(ctx, taskID) (TaskStatus, error)`
+
 Retrieves the current status of a specific task.
 
 #### `WaitForCompletion(ctx, taskID, interval, maxAttempts, callback) (TaskStatus, error)`
+
 Polls the task status until it reaches a terminal state (`completed` or `failed`).
 
 #### `RunTask(ctx, prompt, opts, interval, maxAttempts, callback) (TaskStatus, error)`
+
 Convenience method that combines `SubmitTask` and `WaitForCompletion`.
 
 #### `StreamTaskStatus(ctx, taskID) (TaskStatusStream, error)`
+
 Opens an SSE stream to receive real-time status updates for a task.
 
 #### `RunTaskStream(ctx, prompt, opts) (TaskStatusStream, error)`
+
 Convenience method that submits a task and immediately opens an SSE stream.
 
 ## Streaming Usage
@@ -98,4 +105,3 @@ for {
 ## License
 
 MIT
-
