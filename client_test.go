@@ -96,7 +96,7 @@ func TestClient_SubmitTask_WithOpts(t *testing.T) {
 
 func TestClient_SubmitTask_Errors(t *testing.T) {
 	client := NewClient(TaskForceAIOptions{})
-	
+
 	// 1. Prompt required
 	_, err := client.SubmitTask(context.Background(), "", nil)
 	if err == nil || err.Error() != "prompt is required" {
@@ -238,61 +238,59 @@ func TestClient_WaitForCompletion_Failures(t *testing.T) {
 		t.Errorf("expected context cancelled error, got %v", err)
 	}
 
-		// 4. Polling error (e.g. 500 during poll)
+	// 4. Polling error (e.g. 500 during poll)
 
-		pollErrServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	pollErrServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-			w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 
-		}))
+	}))
 
-		defer pollErrServer.Close()
+	defer pollErrServer.Close()
 
-		client = NewClient(TaskForceAIOptions{BaseURL: pollErrServer.URL})
+	client = NewClient(TaskForceAIOptions{BaseURL: pollErrServer.URL})
 
-		_, err = client.WaitForCompletion(context.Background(), "id", 0, 0, nil) // use defaults
+	_, err = client.WaitForCompletion(context.Background(), "id", 0, 0, nil) // use defaults
 
-		if err == nil {
+	if err == nil {
 
-			t.Error("expected polling error, got nil")
-
-		}
-
-	
-
-		// 5. Context Done in select
-
-		server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-			w.WriteHeader(http.StatusOK)
-
-			_, _ = w.Write([]byte(`{"taskId": "id", "status": "processing"}`))
-
-		}))
-
-		defer server.Close()
-
-		client = NewClient(TaskForceAIOptions{BaseURL: server.URL})
-
-		ctx, cancel = context.WithCancel(context.Background())
-
-		go func() {
-
-			time.Sleep(10 * time.Millisecond)
-
-			cancel()
-
-		}()
-
-		_, err = client.WaitForCompletion(ctx, "id", 50*time.Millisecond, 2, nil)
-
-		if err == nil || !strings.Contains(err.Error(), "context canceled") {
-
-			t.Errorf("expected context canceled in select, got %v", err)
-
-		}
+		t.Error("expected polling error, got nil")
 
 	}
+
+	// 5. Context Done in select
+
+	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		w.WriteHeader(http.StatusOK)
+
+		_, _ = w.Write([]byte(`{"taskId": "id", "status": "processing"}`))
+
+	}))
+
+	defer server.Close()
+
+	client = NewClient(TaskForceAIOptions{BaseURL: server.URL})
+
+	ctx, cancel = context.WithCancel(context.Background())
+
+	go func() {
+
+		time.Sleep(10 * time.Millisecond)
+
+		cancel()
+
+	}()
+
+	_, err = client.WaitForCompletion(ctx, "id", 50*time.Millisecond, 2, nil)
+
+	if err == nil || !strings.Contains(err.Error(), "context canceled") {
+
+		t.Errorf("expected context canceled in select, got %v", err)
+
+	}
+
+}
 
 func TestClient_StreamTaskStatus(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -314,7 +312,7 @@ func TestClient_StreamTaskStatus(t *testing.T) {
 	defer server.Close()
 
 	client := NewClient(TaskForceAIOptions{BaseURL: server.URL, APIKey: "stream-key"})
-	
+
 	// Test RunTaskStream
 	stream, err := client.RunTaskStream(context.Background(), "stream me", nil)
 	if err != nil {
