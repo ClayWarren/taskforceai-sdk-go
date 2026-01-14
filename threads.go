@@ -25,9 +25,9 @@ type ThreadMessage struct {
 
 // CreateThreadOptions contains options for creating a thread.
 type CreateThreadOptions struct {
-	Title    string           `json:"title,omitempty"`
-	Messages []ThreadMessage  `json:"messages,omitempty"`
-	Metadata map[string]any   `json:"metadata,omitempty"`
+	Title    string          `json:"title,omitempty"`
+	Messages []ThreadMessage `json:"messages,omitempty"`
+	Metadata map[string]any  `json:"metadata,omitempty"`
 }
 
 // ThreadListResponse contains a list of threads.
