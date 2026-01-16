@@ -5,7 +5,7 @@ Official Go SDK for the TaskForceAI multi-agent orchestration API.
 ## Installation
 
 ```bash
-go get github.com/TaskForceAI/taskforceai-sdk-go
+go get github.com/ClayWarren/taskforceai-sdk-go
 ```
 
 ## Quick Start
@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/TaskForceAI/taskforceai-sdk-go"
+	"github.com/ClayWarren/taskforceai-sdk-go"
 )
 
 func main() {
